@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
+      "http://localhost:5173/",
       "https://fabric-fusion-assignment-ten.web.app/",
     ],
   })
@@ -58,8 +58,32 @@ async function run() {
 
     app.post("/crafts", async (req, res) => {
       const newCraft = req.body;
-      console.log(newCraft);
+      // console.log(newCraft);
       const result = await craftCollection.insertOne(newCraft);
+      res.send(result);
+    });
+
+    app.put("/craft/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedCraft = req.body;
+      const craft = {
+        $set: {
+          name: updatedCraft.name,
+          photo: updatedCraft.photo,
+          subcategoryBox: updatedCraft.subcategoryBox,
+          shortDescription: updatedCraft.shortDescription,
+          price: updatedCraft.price,
+          rating: updatedCraft.rating,
+          customizationBox: updatedCraft.customizationBox,
+          processingTime: updatedCraft.processingTime,
+          available: updatedCraft.available,
+          email: updatedCraft.email,
+          userName: updatedCraft.userName,
+        },
+      };
+      const result = await craftCollection.updateOne(query, craft, options);
       res.send(result);
     });
 
