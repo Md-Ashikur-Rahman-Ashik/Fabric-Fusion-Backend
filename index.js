@@ -45,6 +45,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/subcategory/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const craft = await craftSubcategory.findOne(query);
+      res.send(craft);
+    });
+
     app.get("/crafts/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
